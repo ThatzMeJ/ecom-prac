@@ -33,8 +33,10 @@ RUN npm ci --only=production
 # Copy ONLY the compiled JavaScript from the builder stage
 COPY --from=builder /app/dist ./dist
 
-# Expose port
-EXPOSE 3001
+# Expose port (adjust if different)
+EXPOSE 3002
 
 # Start the application
-CMD ["npm", "start"]          
+CMD ["npm", "start"]
+
+
