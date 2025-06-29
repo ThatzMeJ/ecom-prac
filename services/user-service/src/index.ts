@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-import helmet from "helmet";
 import morgan from "morgan";
 import config from "./config/config";
 import userRoutes from "./routes/userRoutes";
@@ -8,9 +6,7 @@ import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
-app.use(cors());
+
 
 if (config.env === "development") {
   app.use(morgan("dev"));

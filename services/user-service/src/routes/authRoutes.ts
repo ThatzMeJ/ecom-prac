@@ -1,6 +1,4 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { AuthService } from '../services/authService';
-import { authenticate, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
@@ -12,40 +10,6 @@ const authLogger = (req: Request, res: Response, next: NextFunction) => {
 
 // Apply middleware to all auth routes
 router.use(authLogger);
-
-// POST /auth/login - User login
-router.post('/login', async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-
-    // Simulate validation
-    if (!email || !password) {
-       res.status(400).json({
-        error: 'Email and password are required'
-      });
-      return;
-    }
-
-    // In real app, you'd fetch user from database and verify password
-    // For demo, we'll simulate a successful login
-    const mockUser = {
-      id: 1,
-      email,
-      name: 'John Doe',
-      role: 'user'
-    };
-
-    const tokens = AuthService.generateTokenPair(mockUser);
-
-    res.json({
-      message: 'Login successful',
-      ...tokens,
-      user: { id: mockUser.id, email: mockUser.email, name: mockUser.name, role: mockUser.role }
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Login failed' });
-  }
-});
 
 // POST /auth/register - User registration
 router.post('/register', (req: Request, res: Response) => {
@@ -72,42 +36,12 @@ router.post('/logout', (req: Request, res: Response) => {
 });
 
 // GET /auth/profile - Get user profile (protected route example)
-router.get('/profile', authenticate, (req: AuthRequest, res: Response) => {
+router.get('/profile', (req: Request, res: Response) => {
   res.json({
     message: 'User profile',
-    user: req.user
+    user: req.body
   });
 });
 
-// POST /auth/refresh - Refresh access token
-router.post('/refresh', (req: Request, res: Response) => {
-  try {
-    const { refreshToken } = req.body;
-
-    if (!refreshToken) {
-       res.status(400).json({ error: 'Refresh token required' });
-       return;
-      }
-
-    const decoded = AuthService.verifyRefreshToken(refreshToken);
-
-    // In real app, you'd fetch user from database
-    const mockUser = {
-      id: decoded.id,
-      email: decoded.email,
-      name: 'John Doe',
-      role: decoded.role
-    };
-
-    const newAccessToken = AuthService.generateToken(mockUser);
-
-    res.json({
-      accessToken: newAccessToken,
-      expiresIn: '24h'
-    });
-  } catch (error) {
-    res.status(401).json({ error: 'Invalid refresh token' });
-  }
-});
 
 export default router; 
