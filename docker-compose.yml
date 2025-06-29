@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      - user-service
+      - catalog-service
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - ecom-net
+
+  user-service:
+    build:
+      context: ./services/user-service
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./services/user-service/.env
+    volumes:
+      - ./services/user-service:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - ecom-net
+
+  catalog-service:
+    build:
+      context: ./services/catalog-service
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./services/catalog-service/.env
+    volumes:
+      - ./services/catalog-service:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - ecom-net
+
+networks:
+  ecom-net:
+    driver: bridge

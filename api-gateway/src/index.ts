@@ -5,6 +5,7 @@ import morgan from "morgan";
 import routes from "./routes/routes";
 import config from "./config/config";
 import { proxyHandler } from "./handlers/proxy";
+import { authMiddleware } from "./middleware/auth";
 
 const app = express();
 
@@ -28,17 +29,9 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).send({
-    name: "API Gateway",
-    status: "healthy",
-    timestamp: new Date().toISOString()
-  });
-});
-
 // ✨ THE MAGIC HAPPENS HERE ✨
 // Catch ALL requests and route them through the proxy handler
-app.use('*', proxyHandler);
+app.use('/', authMiddleware, proxyHandler);
 
 
 app.listen(config.PORT, () => {

@@ -1,13 +1,10 @@
 import express, { Request, Response } from "express";
-import cors from "cors";
-import helmet from "helmet";
 import morgan from "morgan";
-import config from "./config/config";
+import config from "./config/config.js";
+import productListingRoute from "./routes/productListingRoute.js";
 
 const app = express();
 
-app.use(cors());
-app.use(helmet());
 if (config.env === "development") {
     app.use(morgan("dev"));
 } else {
@@ -25,6 +22,8 @@ app.get("/health", (req: Request, res: Response) => {
         timestamp: new Date().toISOString()
     });
 });
+
+app.use("/api/v1/products", productListingRoute);
 
 
 app.listen(config.PORT, () => {

@@ -20,7 +20,6 @@ const nonBodyMethods = ['GET', 'HEAD'];
 
 export async function proxyHandler(req: Request, res: Response) {
   try {
-    console.log("req", req);
     const { path, method, headers, body } = req;
 
     console.log(`🔍 Incoming request: ${method} ${path}`);

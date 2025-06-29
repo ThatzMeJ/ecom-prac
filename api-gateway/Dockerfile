@@ -1,7 +1,4 @@
-# ===================
-# STAGE 1: BUILD STAGE
-# ===================
-FROM node:20-slim AS builder
+FROM node:20-slim
 
 WORKDIR /app
 
@@ -14,27 +11,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build TypeScript → JavaScript
-RUN npm run build
-
-# ===================
-# STAGE 2: PRODUCTION STAGE  
-# ===================
-FROM node:20-slim AS production
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install ONLY production dependencies
-RUN npm ci --only=production
-
-# Copy ONLY the compiled JavaScript from the builder stage
-COPY --from=builder /app/dist ./dist
-
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]          
+# Start the application in dev mode (hot reload)
+CMD ["npm", "run", "dev"]          

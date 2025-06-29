@@ -2,9 +2,10 @@
   "name": "catalog-service",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon --exec \"node --loader ts-node/esm\" src/index.ts",
     "build": "tsc",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
@@ -15,9 +16,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bigint-money": "^2.0.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
